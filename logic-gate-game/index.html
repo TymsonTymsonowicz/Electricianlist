@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Logic Gate Designer</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Tutorial Modal -->
+        <div id="tutorial-modal" class="modal">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h2>🎮 How to Play Logic Gate Designer</h2>
+                    <span class="close-btn" id="close-tutorial">&times;</span>
+                </div>
+                <div class="modal-body">
+                    <div class="tutorial-step">
+                        <h3>🎯 Goal</h3>
+                        <p>Design logic circuits that match the truth table shown in the sidebar. Each level has a different pattern you need to create!</p>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <h3>🔧 Step 1: Place Gates</h3>
+                        <p>Click on gate types (AND, OR, NOT, XOR) in the palette to place them on the canvas. You can drag them around to organize your circuit.</p>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <h3>🔗 Step 2: Connect Gates</h3>
+                        <p>Click on the small circles (ports) on gates to create connections. Blue circles are inputs, green circles are outputs.</p>
+                        <ul>
+                            <li><strong>Input ports</strong> (left side): Receive signals from other gates</li>
+                            <li><strong>Output ports</strong> (right side): Send signals to other gates</li>
+                        </ul>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <h3>📊 Step 3: Match the Truth Table</h3>
+                        <p>The truth table shows what your circuit should output for each input combination. For example:</p>
+                        <div class="truth-table-example">
+                            <div>0 0 → 0</div>
+                            <div>0 1 → 1</div>
+                            <div>1 0 → 1</div>
+                            <div>1 1 → 0</div>
+                        </div>
+                        <p>This means: when inputs are 0,0, output should be 0; when 0,1, output should be 1, etc.</p>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <h3>⚡ Gate Logic</h3>
+                        <div class="gate-explanations">
+                            <div class="gate-explanation">
+                                <strong>AND:</strong> Output 1 only when BOTH inputs are 1
+                            </div>
+                            <div class="gate-explanation">
+                                <strong>OR:</strong> Output 1 when AT LEAST ONE input is 1
+                            </div>
+                            <div class="gate-explanation">
+                                <strong>NOT:</strong> Output is OPPOSITE of input (1 becomes 0, 0 becomes 1)
+                            </div>
+                            <div class="gate-explanation">
+                                <strong>XOR:</strong> Output 1 when inputs are DIFFERENT (one 0, one 1)
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="tutorial-step">
+                        <h3>🎉 Winning</h3>
+                        <p>When your circuit matches the truth table perfectly, you'll advance to the next level! The game automatically checks your work.</p>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="start-playing" class="start-btn">Got it! Let's Play →</button>
+                </div>
+            </div>
+        </div>
+
+        <header>
+            <h1>⚡ Logic Gate Designer</h1>
+            <div class="header-info">
+                <span>Level <span id="level">1</span>/5</span>
+                <span id="status" class="status">Click gates to place them</span>
+            </div>
+        </header>
+
+        <div class="main-content">
+            <div class="sidebar">
+                <div class="sidebar-header">
+                    <h3>Gate Types</h3>
+                    <button id="tutorial-btn" class="tutorial-btn">❓ Help</button>
+                </div>
+                <div class="gate-palette">
+                    <button class="gate-btn" data-gate="AND" title="AND: Output 1 only when both inputs are 1">
+                        <div class="gate-icon">AND</div>
+                        <div class="gate-desc">Both inputs = 1</div>
+                    </button>
+                    <button class="gate-btn" data-gate="OR" title="OR: Output 1 when at least one input is 1">
+                        <div class="gate-icon">OR</div>
+                        <div class="gate-desc">Any input = 1</div>
+                    </button>
+                    <button class="gate-btn" data-gate="NOT" title="NOT: Output opposite of input">
+                        <div class="gate-icon">NOT</div>
+                        <div class="gate-desc">Invert input</div>
+                    </button>
+                    <button class="gate-btn" data-gate="XOR" title="XOR: Output 1 when inputs differ">
+                        <div class="gate-icon">XOR</div>
+                        <div class="gate-desc">Inputs differ</div>
+                    </button>
+                </div>
+                
+                <h3>Target Pattern</h3>
+                <div class="target-display">
+                    <p>Input A Input B → Output</p>
+                    <div id="target-table"></div>
+                </div>
+
+                <div class="controls">
+                    <button id="clear-btn" class="clear-btn">🗑️ Clear Board</button>
+                    <button id="hint-btn" class="hint-btn">💡 Hint</button>
+                </div>
+            </div>
+
+            <div class="canvas-area">
+                <div class="canvas-instructions">
+                    <div class="instruction-overlay" id="instruction-overlay">
+                        <div class="instruction-content">
+                            <h3>🚀 Ready to Play?</h3>
+                            <p>1. Click a gate type to place it<br>
+                               2. Drag gates to position them<br>
+                               3. Click ports to connect gates<br>
+                               4. Match the truth table!</p>
+                            <button id="hide-instructions" class="hide-instructions-btn">Start Playing</button>
+                        </div>
+                    </div>
+                </div>
+                <svg id="canvas" class="canvas-svg"></svg>
+                <div id="gates-container" class="gates-container"></div>
+            </div>
+        </div>
+
+        <footer>
+            <div class="footer-left">
+                <span class="connection-hint">Click ports to connect • Drag gates to move</span>
+            </div>
+            <button id="next-btn" class="next-btn" style="display: none;">Next Level →</button>
+            <div class="footer-right">
+                <span class="progress">Level <span id="level-footer">1</span> of 5</span>
+            </div>
+        </footer>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
